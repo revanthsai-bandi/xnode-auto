@@ -1,0 +1,11 @@
+<div class="sidebar flex justify-content-center flex-wrap bg-white">
+  <div class="">
+    <img src="./assets/piggy.svg " width="42px" class="pt-3 m-2">
+    <ul class="nav navbar-nav pt-4" *ngFor="let data of myRoutes">
+      <li class="active"><a>
+          <img [src]="getMeIcon(data.icon)" width="42px" class="m-3">
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>

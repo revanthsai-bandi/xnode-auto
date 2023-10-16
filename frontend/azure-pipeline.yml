@@ -1,0 +1,270 @@
+stages:
+  - stage: build
+    displayName: Build & Push Application
+    pool:
+      vmImage: 'ubuntu-latest'
+    jobs:
+      - job: Deploy
+        displayName: "Build & Push to Azure Container Registry"
+        steps:
+          - task: Docker@2
+            condition: and(succeeded(),eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+            displayName: "Building Docker Image for: dev"
+            inputs:
+              containerRegistry: '$(acr_spn)'
+              repository: '$(name)'
+              command: 'build'
+              Dockerfile: '**/Dockerfile'
+              tags: 'dev'
+              arguments: '--build-arg ENVNAME=dev'
+
+          - task: Docker@2
+            condition: and(succeeded(),eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+            displayName: "Pushing Docker Image for: dev"
+            inputs:
+              containerRegistry: '$(acr_spn)'
+              repository: '$(name)'
+              command: 'push'
+              tags: 'dev'
+
+          - task: Docker@2
+            condition: and(succeeded(),eq(variables['Build.SourceBranch'], 'refs/heads/demo'))
+            displayName: "Building Docker Image for : demo"
+            inputs:
+              containerRegistry: '$(acr_spn)'
+              repository: '$(name)'
+              command: 'build'
+              Dockerfile: '**/Dockerfile'
+              tags: 'demo'
+              arguments: '--build-arg ENVNAME=demo'
+
+          - task: Docker@2
+            condition: and(succeeded(),eq(variables['Build.SourceBranch'], 'refs/heads/demo'))
+            displayName: "Pushing Docker Image for: demo"
+            inputs:
+              containerRegistry: '$(acr_spn)'
+              repository: '$(name)'
+              command: 'push'
+              tags: 'demo'
+
+          - task: Docker@2
+            condition: and(succeeded(),eq(variables['Build.SourceBranch'], 'refs/heads/qa'))
+            displayName: "Building Docker Image for: qa"
+            inputs:
+              containerRegistry: '$(acr_spn)'
+              repository: '$(name)'
+              command: 'build'
+              Dockerfile: '**/Dockerfile'
+              tags: 'qa'
+              arguments: '--build-arg ENVNAME=qa'
+
+          - task: Docker@2
+            condition: and(succeeded(),eq(variables['Build.SourceBranch'], 'refs/heads/qa'))
+            displayName: "Pushing Docker Image for: qa"
+            inputs:
+              containerRegistry: '$(acr_spn)'
+              repository: '$(name)'
+              command: 'push'
+              tags: 'qa'
+
+          - task: Docker@2
+            condition: and(succeeded(),eq(variables['Build.SourceBranch'], 'refs/heads/beta'))
+            displayName: "Building Docker Image for: beta"
+            inputs:
+              containerRegistry: '$(acr_spn)'
+              repository: '$(name)'
+              command: 'build'
+              Dockerfile: '**/Dockerfile'
+              tags: 'beta'
+              arguments: '--build-arg ENVNAME=beta'
+
+          - task: Docker@2
+            condition: and(succeeded(),eq(variables['Build.SourceBranch'], 'refs/heads/beta'))
+            displayName: "Pushing Docker Image for: beta"
+            inputs:
+              containerRegistry: '$(acr_spn)'
+              repository: '$(name)'
+              command: 'push'
+              tags: 'beta'
+
+
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                timestamp="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+                echo "Current timestamp: $timestamp"
+                curl --location 'https://notify-now.azurewebsites.net/api/pusher' \
+                            --header 'Content-Type: application/json' \
+                            --data-raw '{
+                                "message":{"description":"Application Build Complete","title":"$(name)"," status":"App publishing Completed","type":"Xnode","read":"false","start_time":"'"$timestamp"'","important":"true","pinned":"false","recent":"true"},
+                                "channel":"$(env)-xnode-notifier",
+                                "event":"$(email)"
+                            }'
+          - task: Bash@3
+            displayName: "Send Failure Notification"
+            condition: failed()  # This task will run only if the previous steps failed
+            inputs:
+              targetType: 'inline'
+              script: |
+                timestamp="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+                echo "Current timestamp: $timestamp"
+                curl --location 'https://notify-now.azurewebsites.net/api/pusher' \
+                  --header 'Content-Type: application/json' \
+                  --data-raw '{
+                    "message":{"description":"Application Build Failed","status":"Failed","type":"Xnode","start_time":"'"$timestamp"'","title":"$(name)","read":"false","important":"true","pinned":"false","recent":"true"},
+                    "channel":"$(env)-xnode-notifier",
+                    "event":"$(email)"
+                  }'
+  - stage: deploy
+    dependsOn: build
+    displayName: "Deploy to Azure Webapp"
+    jobs:
+      - job: Deploy
+        displayName: "Deploy to Azure WebApp"
+        pool:
+          vmImage: "ubuntu-latest"
+        steps:
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                timestamp="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+                echo "Current timestamp: $timestamp"
+                curl --location 'https://notify-now.azurewebsites.net/api/pusher' \
+                            --header 'Content-Type: application/json' \
+                            --data-raw '{
+                                            "message":{"description":"Deploying Application","title":"$(name)","status":"Started","type":"Xnode","read":"false","start_time":"'"$timestamp"'","important":"true","pinned":"false","recent":"true"},
+                                            "channel":"$(env)-xnode-notifier",
+                                            "event":"$(email)"
+                                        }'
+          - task: Bash@3
+            displayName: "Send Failure Notification"
+            condition: failed()  # This task will run only if the previous steps failed
+            inputs:
+              targetType: 'inline'
+              script: |
+                timestamp="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+                echo "Current timestamp: $timestamp"
+                curl --location 'https://notify-now.azurewebsites.net/api/pusher' \
+                  --header 'Content-Type: application/json' \
+                  --data-raw '{
+                    "message":{"description":"Deploying Application Failed","status":"Failed","type":"Xnode","start_time":"'"$timestamp"'","title":"$(name)","read":"false","important":"true","pinned":"false","recent":"true"},
+                    "channel":"$(env)-xnode-notifier",
+                    "event":"$(email)"
+                  }'
+
+          - task: AzureRmWebAppDeployment@4
+            displayName: "Deploy to Azure WebApp to ENV: dev"
+            condition: and(succeeded(),eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+            inputs:
+              ConnectionType: 'AzureRM'
+              azureSubscription: $(service_connection)
+              appType: 'webAppContainer'
+              WebAppName: $(appservice_name)
+              DockerNamespace: $(acr_login)
+              DockerRepository: $(name)
+              DockerImageTag: 'dev'
+
+          - task: AzureRmWebAppDeployment@4
+            displayName: "Deploy to Azure WebApp to ENV: demo"
+            condition: and(succeeded(),eq(variables['Build.SourceBranch'], 'refs/heads/demo'))
+            inputs:
+              ConnectionType: 'AzureRM'
+              azureSubscription: $(service_connection)
+              appType: 'webAppContainer'
+              WebAppName: $(appservice_name)
+              DockerNamespace: $(acr_login)
+              DockerRepository: $(name)
+              DockerImageTag: 'demo'
+
+          - task: AzureRmWebAppDeployment@4
+            displayName: "Deploy to Azure WebApp to ENV: qa"
+            condition: and(succeeded(),eq(variables['Build.SourceBranch'], 'refs/heads/qa'))
+            inputs:
+              ConnectionType: 'AzureRM'
+              azureSubscription: $(service_connection)
+              appType: 'webAppContainer'
+              WebAppName: $(appservice_name)
+              DockerNamespace: $(acr_login)
+              DockerRepository: $(name)
+              DockerImageTag: 'qa'
+
+
+          - task: AzureRmWebAppDeployment@4
+            displayName: "Deploy to Azure WebApp to ENV: beta"
+            condition: and(succeeded(),eq(variables['Build.SourceBranch'], 'refs/heads/beta'))
+            inputs:
+              ConnectionType: 'AzureRM'
+              azureSubscription: $(service_connection)
+              appType: 'webAppContainer'
+              WebAppName: $(appservice_name)
+              DockerNamespace: $(acr_login)
+              DockerRepository: $(name)
+              DockerImageTag: 'beta'
+
+          - task: AzureAppServiceManage@0
+            displayName: "Restart Azure WebApp"
+            inputs:
+              azureSubscription: $(service_connection)
+              Action: 'Restart Azure App Service'
+              WebAppName: $(appservice_name)
+
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                timestamp="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+                echo "Current timestamp: $timestamp"
+                productId="${PRODUCT_ID}"
+                curl --location 'https://notify-now.azurewebsites.net/api/pusher' \
+                            --header 'Content-Type: application/json' \
+                            --data-raw '{
+                                "message":{"description":"Deployed Application Successfully","product_status":"deployed","status":"completed","type":"Xnode","start_time":"'"$timestamp"'","title":"$(name)","product_url":"https://$(appservice_name).azurewebsites.net", "product_id": "'"${productId}"'", "read":"false","important":"true","pinned":"false","recent":"true"},
+                                "channel":"$(env)-xnode-notifier",
+                                "event":"$(email)"
+                            }'
+          - task: Bash@3
+            displayName: "Send Failure Notification"
+            condition: failed()  # This task will run only if the previous steps failed
+            inputs:
+              targetType: 'inline'
+              script: |
+                timestamp="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+                echo "Current timestamp: $timestamp"
+                curl --location 'https://notify-now.azurewebsites.net/api/pusher' \
+                  --header 'Content-Type: application/json' \
+                  --data-raw '{
+                    "message":{"description":"Deploying Application Failed","status":"Failed","type":"Xnode","timestamp":"'"$timestamp"'","title":"$(name)","read":"false","important":"true","pinned":"false","recent":"true"},
+                    "channel":"$(env)-xnode-notifier",
+                    "event":"$(email)"
+                  }'
+
+  - stage: notify
+    dependsOn : deploy
+    displayName: Send Email
+    pool:
+      vmImage: 'windows-latest'
+    jobs:
+      - job: Notify
+        displayName: "Send Email"
+        steps:
+          - bash: |
+              curl -X 'POST' \
+                'https://$(env)-notify-api.azurewebsites.net/email/notify' \
+                -H 'accept: application/json' \
+                -H 'Content-Type: application/json' \
+                -d '{
+                "to": [
+                  "$(email)"
+                ],
+                "cc": [
+                  "beta@xnode.ai"
+                ],
+                "bcc": [
+                  "dev.xnode@salientminds.com"
+                ],
+                "emailTemplateCode": "PUBLISH_APP",
+                "params": {"url": "https://$(appservice_name).azurewebsites.net/login?product_id=$(product_id)"}
+              }'
+            displayName: 'Send Notification Email'

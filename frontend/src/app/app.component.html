@@ -1,0 +1,18 @@
+<div class="w-full h-full  overflow-hidden ">
+    <div class="w-full wrapper" *ngIf="isUserExists()">
+        <div class="app-side-menu">
+            <app-template-side-menu></app-template-side-menu>
+        </div>
+        <div class="app-body-wrapper">
+            <div class="app-header ">
+                <app-template-header (toggleMenu)="toggleMenu()"></app-template-header>
+            </div>
+            <div class="w-full">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    </div>
+    <router-outlet *ngIf="!isUserExists()"></router-outlet>
+</div>
+<p-toast></p-toast>
+<ngx-spinner size="medium" type="ball-clip-rotate-multiple"></ngx-spinner>

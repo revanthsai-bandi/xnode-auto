@@ -1,0 +1,137 @@
+:host ::ng-deep .p-inputtext {
+  border-radius: 25px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background: #ffff;
+  color: #ffffff;
+
+}
+
+:host ::ng-deep input,
+button,
+select,
+optgroup,
+textarea {
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  border: none !important;
+  width: 245px;
+}
+
+.app-header {
+  height: 88px;
+  background: #ffff;
+  width: 100%;
+}
+
+.search-bar {
+  padding-left: 1rem;
+}
+
+.logo-icon {
+  display: none !important;
+}
+
+.finbuddy-text {
+  width: 42px;
+  color: #000759;
+}
+
+.menu-icon {
+  display: none !important;
+}
+
+:host ::ng-deep .logout-button.p-splitbutton {
+  position: static;
+}
+
+:host ::ng-deep .p-splitbutton.p-button-text.p-button-plain>.p-button {
+  color: #6c757d !important;
+  background-color: white !important;
+  border: none !important;
+}
+
+:host ::ng-deep .p-button:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: none;
+}
+
+.user-name{
+  color: #6c757d !important;
+}
+
+/* Media query for mobile devices */
+@media (max-width: 767px) {
+
+  .bell-icon {
+    display: none !important;
+  }
+
+  .angle-icon {
+    display: none !important;
+  }
+
+  :host ::ng-deep .template-builder-user .p-splitbutton.p-button-text.p-button-plain>.p-button:first-of-type{
+    display:none!important; 
+  }
+
+  .img-text {
+    display: none !important;
+  }
+
+  .logo-icon {
+    display: block !important;
+  }
+
+  .menu-icon {
+    display: block !important;
+  }
+
+  .hidden-sm {
+    display: none !important;
+  }
+
+  .logo-menu {
+    display: block !important;
+    padding-top: 20px;
+  }
+
+  .show-logo {
+    display: none;
+  }
+}
+
+/* Media query for tablet devices */
+@media (max-width: 991px) {
+
+  .bell-icon {
+    display: none !important;
+  }
+
+  .angle-icon {
+    display: none !important;
+  }
+
+  .img-text {
+    display: none !important;
+  }
+
+  .logo-icon {
+    display: block !important;
+  }
+
+  .menu-icon {
+    display: block !important;
+  }
+
+  .hidden-sm {
+    display: none !important;
+  }
+
+  .show-logo {
+    display: none;
+  }
+}

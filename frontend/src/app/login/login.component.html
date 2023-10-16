@@ -1,0 +1,54 @@
+<div class="grid m-0 h-full">
+    <div class="bg-image bg-no-repeat w-12 h-12">
+        <div class="">
+            <div class="flex justify-content-center mt-8">
+                <p-card [style]=" { width: '780px' ,height: 'auto' }" class="card">
+                    <div class="sm:col-12 md:col-12 lg:col-12 xl:col-12 p-5">
+                        <form [formGroup]="loginForm" (ngSubmit)="onClickLogin()">
+                            <h1 class="signup-color font-bold font-normal text-6xl">Login</h1>
+                            <div class="formgrid grid mt-4">
+                                <div class="field col-12 sm:col-12 md:col-12 lg:col-12 xl:col-12">
+                                    <label htmlFor="email" class="font-medium text-base">Email</label>
+                                    <input pInputText id="email" placeholder="Enter email" formControlName="email"
+                                        autocomplete="username"
+                                        [ngClass]="{ 'is-invalid': submitted && login['email'].errors }"
+                                        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full" />
+                                    <div *ngIf="submitted && login['email'].errors" class="invalid-feedback">
+                                        <div *ngIf="login['email'].errors?.['required']">Email
+                                            is required</div>
+                                        <div *ngIf="login['email'].errors['email']">Email
+                                            must be a valid email address</div>
+                                    </div>
+                                </div>
+                                <div class="field col-12 sm:col-12 md:col-12 lg:col-12 xl:col-12">
+                                    <label htmlFor="password" class="font-medium text-base">Password</label>
+                                    <p-password [toggleMask]="true" formControlName="password"
+                                        placeholder="Enter password" [style]="{'width':'100%', 'height': '42px'}"
+                                        class="password-field"
+                                        [ngClass]="{ 'is-invalid': submitted && login['password'].errors }"></p-password>
+                                    <div *ngIf="submitted && login['password'].errors" class="invalid-feedback">
+                                        <div *ngIf="login['password'].errors['required']">Password
+                                            is required</div>
+                                        <div *ngIf="login['password'].errors['minlength']">Password
+                                            must be at least 6 characters
+                                        </div>
+                                    </div>
+                                </div>
+                                <p *ngIf="errorMessage" class="error-message">{{errorMessage}}</p>
+                                <div class="field col-12 sm:col-12 md:col-12 lg:col-12 xl:col-12 mt-4">
+                                    <p-button label="Login" styleClass="p-button-rounded  font-medium text-lg"
+                                        [disabled]="loginForm.invalid" (click)="onClickLogin()"></p-button>
+                                    <fieldset class="submit-fieldset">
+                                        <button type="submit" style="display: none;"></button>
+                                    </fieldset>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </p-card>
+            </div>
+        </div>
+    </div>
+
+</div>

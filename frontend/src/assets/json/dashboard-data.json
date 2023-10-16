@@ -1,0 +1,164 @@
+{
+     "dashboarddata": [
+          {
+               "label": "OrderManagement",
+               "title": "Orders Processed",
+               "value": "100",
+               "backgroundColor": "#f94144",
+               "textColor": "#ffffff",
+               "type": "card"
+          },
+          {
+               "label": "ShippingManagement",
+               "title": "Shipments Delivered",
+               "value": "50",
+               "backgroundColor": "#90be6d",
+               "textColor": "#ffffff",
+               "type": "card"
+          },
+          {
+               "label": "WarehouseManagement",
+               "title": "Inventory Levels",
+               "value": "1000",
+               "backgroundColor": "#f94144",
+               "textColor": "#ffffff",
+               "type": "card"
+          },
+          {
+               "label": "CustomerService",
+               "title": "Customer Inquiries",
+               "value": "20",
+               "backgroundColor": "#90be6d",
+               "textColor": "#ffffff",
+               "type": "card"
+          },
+          {
+               "title": "Pie Chat",
+               "value": {
+                    "chartTitle": "Logistics Shipping and Management Use Cases",
+                    "title": {
+                         "display": true,
+                         "text": "Expense Distribution",
+                         "fontSize": 16
+                    },
+                    "data": {
+                         "labels": [
+                              "Groceries",
+                              "Transportation",
+                              "Bills",
+                              "Entertainment",
+                              "Others"
+                         ],
+                         "datasets": [
+                              {
+                                   "data": [
+                                        25,
+                                        15,
+                                        30,
+                                        10,
+                                        20
+                                   ],
+                                   "backgroundColor": [
+                                        "#f94144",
+                                        "#90be6d",
+                                        "#577590",
+                                        "#3b82f6",
+                                        "#eab308"
+                                   ]
+                              }
+                         ]
+                    }
+               },
+               "type": "pie_chart"
+          },
+          {
+               "title": "Order Management Performance Over Time",
+               "value": {
+                    "chartTitle": "Order Management Performance Over Time",
+                    "data": {
+                         "labels": [
+                              "January",
+                              "February",
+                              "March",
+                              "April",
+                              "May",
+                              "June"
+                         ],
+                         "datasets": [
+                              {
+                                   "label": "Orders Completed",
+                                   "data": [
+                                        1000,
+                                        1100,
+                                        1200,
+                                        1300,
+                                        1400,
+                                        1500
+                                   ],
+                                   "color": "#90be6d"
+                              },
+                              {
+                                   "label": "Orders Cancelled",
+                                   "data": [
+                                        100,
+                                        150,
+                                        200,
+                                        250,
+                                        300,
+                                        350
+                                   ],
+                                   "color": "#f94144"
+                              },
+                              {
+                                   "label": "Orders Returned",
+                                   "data": [
+                                        50,
+                                        75,
+                                        100,
+                                        125,
+                                        150,
+                                        175
+                                   ],
+                                   "color": "#f3722c"
+                              }
+                         ]
+                    }
+               },
+               "type": "line_chart"
+          },
+          {
+               "title": "Logistics Shipping and Management -table",
+               "value": {
+                    "tableTitle": "Logistics Shipping and Management",
+                    "columnHeaders": [
+                         "Use Cases",
+                         "Data Models",
+                         "Rules"
+                    ],
+                    "rows": [
+                         {
+                              "Use Cases": "Order management: tracking orders, managing inventory, and handling returns",
+                              "Data Models": "Order data: customer information, product details, shipping information, and payment information",
+                              "Rules": "Ensure that all customer data is kept secure and confidential"
+                         },
+                         {
+                              "Use Cases": "Shipping management: selecting carriers, managing shipping rates, and tracking shipments",
+                              "Data Models": "Inventory data: product details, stock levels, and location information",
+                              "Rules": "Provide real-time tracking information for all shipments"
+                         },
+                         {
+                              "Use Cases": "Warehouse management: managing inventory levels, organizing warehouse space, and optimizing picking and packing processes",
+                              "Data Models": "Shipping data: carrier information, shipping rates, and tracking information",
+                              "Rules": "Optimize shipping rates by selecting the most cost-effective carriers"
+                         },
+                         {
+                              "Use Cases": "Customer service: handling customer inquiries, managing complaints, and providing support",
+                              "Data Models": "Warehouse data: inventory levels, location information, and picking and packing processes",
+                              "Rules": "Minimize inventory holding costs by optimizing inventory levels and warehouse space"
+                         }
+                    ]
+               },
+               "type": "table"
+          }
+     ]
+}
