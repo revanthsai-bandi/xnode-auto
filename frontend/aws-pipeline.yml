@@ -22,10 +22,9 @@ stages:
 
     - task: ECRPushImage@1
       inputs:
-        awsCredentials: 'AWS_ECR'
-        regionName: us-east-1
+        awsCredentials: 'aws-spn'
+        regionName: 'us-east-1'
         imageSource: 'imagename'
-        sourceImageName: $(DOCKER_REPOSITORY_NAME)
-        sourceImageTag: $(Build.BuildId)
-        pushTag: latest
-        repositoryName: $(DOCKER_REPOSITORY_NAME)
+        sourceImageName: '$(DOCKER_REPOSITORY_NAME)'
+        sourceImageTag: '$(Build.BuildId)'
+        repositoryName: '$(DOCKER_REPOSITORY_NAME)'
