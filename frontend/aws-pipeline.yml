@@ -14,10 +14,11 @@ stages:
           - task: Docker@2
             displayName: Build an image
             inputs:
-              command: build
-              dockerfile: '$(Build.SourcesDirectory)/Dockerfile' 
+              containerRegistry: 'docker-spn'
+              repository: '$(DOCKER_REPOSITORY_NAME)'
+              command: 'build'
+              Dockerfile: '**/Dockerfile'
               buildContext: '$(Agent.BuildDirectory)'
-              repository: $(DOCKER_REPOSITORY_NAME)
 
           - task: ECRPushImage@1
             inputs:
