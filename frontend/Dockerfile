@@ -5,6 +5,7 @@ COPY ./package.json /app/
 RUN npm run i
 COPY . /app
 RUN npm run build
+
 # Start Server
 FROM nginx:alpine
 COPY --from=build /app/dist/angular-template /usr/share/nginx/html
