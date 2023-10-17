@@ -3,26 +3,41 @@ stages:
     displayName: Build & Push Application
     pool:
       vmImage: 'ubuntu-latest'
-    jobs:
-      - job: Deploy
-        displayName: "Build & Push to Azure Container Registry"
-        steps:
-          - task: Docker@2
-            condition: and(succeeded(),eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
-            displayName: "Building Docker Image for: dev"
-            inputs:
-              containerRegistry: '$(acr_spn)'
-              repository: '$(name)'
-              command: 'build'
-              Dockerfile: '**/Dockerfile'
-              tags: 'dev'
-              arguments: '--build-arg ENVNAME=dev'
+variables:
+  - name: ecrRepository
+    value: 'xnode-container-registry'
+  - name: ecrRegion
+    value: 'us-east-1'
+  - name: ebEnvironment
+    value: 'xnode-dev'
 
-          - task: Docker@2
-            condition: and(succeeded(),eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
-            displayName: "Pushing Docker Image for: dev"
-            inputs:
-              containerRegistry: '$(acr_spn)'
-              repository: '$(name)'
-              command: 'push'
-              tags: 'dev'
+stages:
+- stage: Build
+  jobs:
+  - job: BuildAndPushImage
+    steps:
+    - task: Docker@2
+      displayName: Build Docker image
+      inputs:
+        containerfile: 'Dockerfile'
+        buildContext: '.'
+
+    - task: AWS.ECRPushImage@1
+      displayName: Push Docker image to ECR
+      inputs:
+        awsCredentials: '$(System.DefaultWorkingDirectory)/aws-credentials.json'
+        awsRegion: '$(ecrRegion)'
+        repositoryName: '$(ecrRepository)'
+        imageTag: '$(Build.BuildNumber)'
+
+- stage: Deploy
+  jobs:
+  - job: DeployToEB
+    steps:
+    - task: AWS.ElasticBeanstalkDeployApplication@1
+      displayName: Deploy application to Elastic Beanstalk
+      inputs:
+        awsCredentials: '$(System.DefaultWorkingDirectory)/aws-credentials.json'
+        applicationName: 'xnode-application'
+        environmentName: '$(ebEnvironment)'
+        versionLabel: '$(Build.BuildNumber)'
