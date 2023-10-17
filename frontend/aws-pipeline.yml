@@ -1,43 +1,61 @@
-stages:
-  - stage: build
-    displayName: Build & Push Application
-    pool:
-      vmImage: 'ubuntu-latest'
+trigger:
+- dev
+
+pool:
+  vmImage: 'ubuntu-latest'
+
 variables:
-  - name: ecrRepository
-    value: 'xnode-container-registry'
-  - name: ecrRegion
-    value: 'us-east-1'
-  - name: ebEnvironment
-    value: 'xnode-dev'
+  azureSubscription: 'YourAzureSubscription'
+  awsAccessKey: 'YourAWSAccessKey'    
+  awsSecretKey: 'YourAWSSecretKey'
+  ecrRepo: 'YourECRRepo'
+  ebApplication: 'YourEBApplication'
+  ebEnvironment: 'YourEBEnvironment'
+  imageRepository: 'YourACRServiceConnection'
+  tag: '$(Build.BuildNumber)'  # You can use a different tag if needed
 
-stages:
-- stage: Build
-  jobs:
-  - job: BuildAndPushImage
-    steps:
-    - task: Docker@2
-      displayName: Build Docker image
-      inputs:
-        containerfile: 'Dockerfile'
-        buildContext: '.'
+steps:
+- task: Docker@2
+  displayName: 'Build and push image to ACR'
+  inputs:
+    containerRegistry: 'YourACRServiceConnection'
+    repository: '$(imageRepository)'
+    command: 'buildAndPush'
+    Dockerfile: '**/Dockerfile'
+    tags: '$(tag)'
+      
+# - task: AmazonWebServices.aws-cli.AWSCLI@2
+#   displayName: 'Login to AWS ECR'
+#   inputs:
+#     awsCredentials: 'YourAWSServiceConnection'
+#     regionName: 'us-east-1'
+#     command: 'ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin YourAWSAccount.dkr.ecr.us-east-1.amazonaws.com'
 
-    - task: AWS.ECRPushImage@1
-      displayName: Push Docker image to ECR
-      inputs:
-        awsCredentials: '$(System.DefaultWorkingDirectory)/aws-credentials.json'
-        awsRegion: '$(ecrRegion)'
-        repositoryName: '$(ecrRepository)'
-        imageTag: '$(Build.BuildNumber)'
+- task: AWSCLI@1
+  inputs:
+    awsCredentials: 'aws-spn'
+    regionName: 'us-east-1'
+    awsCommand: 'ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin YourAWSAccount.dkr.ecr.us-east-1.amazonaws.com'
+ 
+# - task: Docker@2    
+#   displayName: 'Tag image for ECR'
+#   inputs:
+#     containerRegistry: 'YourACRServiceConnection'
+#     repository: '$(imageRepository)'
+#     command: 'tag'
+#     arguments: '--source $(imageRepository):$(tag) --target YourAWSAccount.dkr.ecr.us-east-1.amazonaws.com/$(ecrRepo):$(tag)'
+    
+- task: Docker@2
+  displayName: 'Push image to ECR'    
+  inputs:
+    containerRegistry: 'YourACRServiceConnection'
+    repository: 'YourAWSAccount.dkr.ecr.us-east-1.amazonaws.com/$(ecrRepo)'
+    command: 'push'
+    Dockerfile: '**/Dockerfile'
+    tags: '$(tag)'
 
-- stage: Deploy
-  jobs:
-  - job: DeployToEB
-    steps:
-    - task: AWS.ElasticBeanstalkDeployApplication@1
-      displayName: Deploy application to Elastic Beanstalk
-      inputs:
-        awsCredentials: '$(System.DefaultWorkingDirectory)/aws-credentials.json'
-        applicationName: 'xnode-application'
-        environmentName: '$(ebEnvironment)'
-        versionLabel: '$(Build.BuildNumber)'
+- task: AWSCLI@1
+  inputs:
+    awsCredentials: 'aws-spn'
+    regionName: 'us-east-1'
+    awsCommand: 'eb deploy $(ebEnvironment) --label $(Build.BuildNumber)'
