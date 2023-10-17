@@ -1,29 +1,36 @@
-trigger:
-  branches:
-    include:
+trigger:  
+  branches:    
+    include:      
       - dev
-stages:
-  - stage: Docker
-    displayName: Build & Push Docker image to AWS ECR
-    jobs:
-      - job: Build_and_Push
-        displayName: Build & Push Docker image
-        pool:
-          vmImage: ubuntu-latest
-        steps:
-          - task: Docker@2
-            displayName: Build an image
-            inputs:
-              containerRegistry: 'docker-spn'
-              repository: 'testing/Billpay'
-              command: 'buildAndPush'
-              Dockerfile: '**/Dockerfile'
-              buildContext: '$(Agent.BuildDirectory)'
+resources:
+- repo: self
 
-          - task: ECRPushImage@1
-            inputs:
-              awsCredentials: 'aws-spn'
-              regionName: 'us-east-1'
-              imageSource: 'imagename'
-              sourceImageName: '$(DOCKER_REPOSITORY_NAME):$(Build.BuildId)'
-              repositoryName: '$(DOCKER_REPOSITORY_NAME)'
+variables:
+  tag: '$(Build.BuildId)'
+
+stages:
+- stage: Build
+  displayName: Build image
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: Docker@2
+      displayName: Build an image
+      inputs:
+        command: 'build'
+        Dockerfile: '$(Build.SourceDirectory)/Dockerfile'
+        repository: $(imageName)
+        tags: |
+          $(tag)
+    - task: ECRPushImage@1
+      inputs:
+        awsCredentials: 'aws-spn'
+        regionName: 'ap-south-1'
+        imageSource: 'imageid'
+        sourceImageId: '$(imageName):$(tag)'
+        repositoryName: '$(repoName)'
+        pushTag: '$(tag)'
+        forceDockerNamingConventions: true
