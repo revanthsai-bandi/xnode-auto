@@ -15,8 +15,8 @@ stages:
             displayName: Build an image
             inputs:
               command: build
-              buildContext: ./src
-              dockerfile: ./Dockerfile
+              dockerfile: '$(Build.SourcesDirectory)/Dockerfile' 
+              buildContext: '$(Agent.BuildDirectory)'
               repository: $(DOCKER_REPOSITORY_NAME)
 
           - task: ECRPushImage@1
