@@ -16,7 +16,7 @@ stages:
             inputs:
               containerRegistry: 'docker-spn'
               repository: '$(DOCKER_REPOSITORY_NAME)'
-              command: 'build'
+              command: 'buildAndPush'
               Dockerfile: '**/Dockerfile'
               buildContext: '$(Agent.BuildDirectory)'
 
