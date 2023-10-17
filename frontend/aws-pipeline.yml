@@ -2,7 +2,6 @@ trigger:
   branches:    
     include:      
       - dev
-pr: none
 stages:
 - stage: Docker
   displayName: Build & Push Docker image to AWS ECR
