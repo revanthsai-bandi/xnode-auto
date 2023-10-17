@@ -1,29 +1,28 @@
-trigger:  
-  branches:    
-    include:      
+trigger:
+  branches:
+    include:
       - dev
 stages:
-- stage: Docker
-  displayName: Build & Push Docker image to AWS ECR
-  jobs:
-  - job: Build_and_Push
-    displayName: Build & Push Docker image
-    pool:
-      vmImage: ubuntu-latest
-    steps:
-    - task: Docker@2
-      displayName: Build an image
-      inputs:
-        command: build
-        dockerfile: '**/Dockerfile'
-        buildContext: '$(Build.SourcesDirectory)'
-        repository: $(DOCKER_REPOSITORY_NAME)
+  - stage: Docker
+    displayName: Build & Push Docker image to AWS ECR
+    jobs:
+      - job: Build_and_Push
+        displayName: Build & Push Docker image
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: Docker@2
+            displayName: Build an image
+            inputs:
+              command: build
+              dockerfile: './path/to/Dockerfile'
+              buildContext: .
+              repository: $(DOCKER_REPOSITORY_NAME)
 
-    - task: ECRPushImage@1
-      inputs:
-        awsCredentials: 'aws-spn'
-        regionName: 'us-east-1'
-        imageSource: 'imagename'
-        sourceImageName: '$(DOCKER_REPOSITORY_NAME)'
-        sourceImageTag: '$(Build.BuildId)'
-        repositoryName: '$(DOCKER_REPOSITORY_NAME)'
+          - task: ECRPushImage@1
+            inputs:
+              awsCredentials: 'aws-spn'
+              regionName: 'us-east-1'
+              imageSource: 'imagename'
+              sourceImageName: '$(DOCKER_REPOSITORY_NAME):$(Build.BuildId)'
+              repositoryName: '$(DOCKER_REPOSITORY_NAME)'
