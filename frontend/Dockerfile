@@ -1,13 +1,10 @@
 # Install & Build
 FROM node:18-alpine as build
-ARG ENVNAME
-ENV P=${ENVNAME}
 WORKDIR /app
 COPY ./package.json /app/
 RUN npm run i
 COPY . /app
-RUN npm run build:$P
-
+RUN npm run build
 # Start Server
 FROM nginx:alpine
 COPY --from=build /app/dist/angular-template /usr/share/nginx/html
