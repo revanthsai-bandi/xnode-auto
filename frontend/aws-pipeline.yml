@@ -15,7 +15,7 @@ stages:
             displayName: Build an image
             inputs:
               containerRegistry: 'docker-spn'
-              repository: '$(DOCKER_REPOSITORY_NAME)'
+              repository: 'testing/Billpay'
               command: 'buildAndPush'
               Dockerfile: '**/Dockerfile'
               buildContext: '$(Agent.BuildDirectory)'
