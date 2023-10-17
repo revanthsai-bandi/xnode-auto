@@ -1,0 +1,28 @@
+stages:
+  - stage: build
+    displayName: Build & Push Application
+    pool:
+      vmImage: 'ubuntu-latest'
+    jobs:
+      - job: Deploy
+        displayName: "Build & Push to Azure Container Registry"
+        steps:
+          - task: Docker@2
+            condition: and(succeeded(),eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+            displayName: "Building Docker Image for: dev"
+            inputs:
+              containerRegistry: '$(acr_spn)'
+              repository: '$(name)'
+              command: 'build'
+              Dockerfile: '**/Dockerfile'
+              tags: 'dev'
+              arguments: '--build-arg ENVNAME=dev'
+
+          - task: Docker@2
+            condition: and(succeeded(),eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+            displayName: "Pushing Docker Image for: dev"
+            inputs:
+              containerRegistry: '$(acr_spn)'
+              repository: '$(name)'
+              command: 'push'
+              tags: 'dev'
