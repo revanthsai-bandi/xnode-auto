@@ -7,7 +7,7 @@ COPY . /app
 RUN npm run build
 
 # Start Server
-FROM nginx:alpine
+#FROM nginx:alpine
 COPY --from=build /app/dist/angular-template /usr/share/nginx/html
 RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx/nginx.conf /etc/nginx/conf.d
