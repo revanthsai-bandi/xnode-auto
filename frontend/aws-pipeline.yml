@@ -20,11 +20,11 @@ stages:
     - task: Docker@2
       displayName: Build an image
       inputs:
+        containerRegistry: 'docker-spn'
+        repository: '$(imageName)'
         command: 'build'
-        Dockerfile: '$(Build.SourceDirectory)/Dockerfile'
-        repository: $(imageName)
-        tags: |
-          $(tag)
+        Dockerfile: '**/Dockerfile'
+        tags: '$(tag)'
     - task: ECRPushImage@1
       inputs:
         awsCredentials: 'aws-spn'
