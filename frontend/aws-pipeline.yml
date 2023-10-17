@@ -16,7 +16,7 @@ stages:
       displayName: Build an image
       inputs:
         command: build
-        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+        dockerfile: '**/Dockerfile'
         buildContext: '$(Build.SourcesDirectory)'
         repository: $(DOCKER_REPOSITORY_NAME)
 
