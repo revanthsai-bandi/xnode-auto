@@ -11,11 +11,11 @@ jobs:
   - task: Docker@2
     displayName: 'Build Docker Image'
     inputs:
-      containerRegistry: 37dc5194-dc90-42c0-b602-23a7c30da044
-      repository: $(imageName)
-      command: build
-      Dockerfile: $(Build.SourcesDirectory)/Dockerfile   # Provide the path to your Dockerfile
-      tags: dev
+      containerRegistry: '37dc5194-dc90-42c0-b602-23a7c30da044'
+      repository: '$(imageName)'
+      command: 'build'
+      Dockerfile: '**/Dockerfile'
+      tags: 'dev'
   - script: |
       docker images  # List Docker images to verify that the image was built successfully
     displayName: 'List Docker Images'
