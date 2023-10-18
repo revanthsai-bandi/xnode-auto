@@ -1,36 +1,30 @@
-trigger:  
-  branches:    
-    include:      
-      - dev
-resources:
-- repo: self
-
-variables:
-  tag: '$(Build.BuildId)'
-
-stages:
-- stage: Build
-  displayName: Build image
-  jobs:
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: ubuntu-latest
-    steps:
-    - task: Docker@2
-      displayName: Build an image
-      inputs:
-        containerRegistry: 'docker-spn'
-        repository: '$(imageName)'
-        command: 'build'
-        Dockerfile: '**/Dockerfile'
-        tags: '$(tag)'
-    - task: ECRPushImage@1
-      inputs:
-        awsCredentials: 'aws-spn'
-        regionName: 'ap-south-1'
-        imageSource: 'imageid'
-        sourceImageId: '$(imageName):$(tag)'
-        repositoryName: '$(repoName)'
-        pushTag: '$(tag)'
-        forceDockerNamingConventions: true
+# Variable 'imageName' was defined in the Variables tab
+# Variable 'repoName' was defined in the Variables tab
+jobs:
+- job: Job_1
+  displayName: Agent job 1
+  pool:
+    vmImage: ubuntu-latest
+  steps:
+  - checkout: self
+    fetchDepth: 1
+  - task: Docker@2
+    displayName: 'Build Docker Image'
+    inputs:
+      containerRegistry: 37dc5194-dc90-42c0-b602-23a7c30da044
+      repository: $(imageName)
+      command: build
+      Dockerfile: $(Build.SourcesDirectory)/Dockerfile   # Provide the path to your Dockerfile
+      tags: dev
+  - script: |
+      docker images  # List Docker images to verify that the image was built successfully
+    displayName: 'List Docker Images'
+  - task: ECRPushImage@1
+    inputs:
+      awsCredentials: 'f846a778-d129-487b-95a8-8e0fa07b86c5'
+      regionName: 'ap-south-1'
+      imageSource: 'imagename'
+      sourceImageName: '$(imageName):dev'
+      repositoryName: '$(repoName)'
+      pushTag: 'dev'
+      forceDockerNamingConventions: true
