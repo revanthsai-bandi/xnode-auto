@@ -24,7 +24,7 @@ jobs:
       awsCredentials: 'aws-spn'
       regionName: 'ap-south-1'
       imageSource: 'imagename'
-      sourceImageName: '$(imageName):dev'  # Adjust this line
+      sourceImageName: '$(imageName):$(Build.BuildId)'
       repositoryName: '$(repoName)'
       pushTag: 'dev'
       forceDockerNamingConventions: true
