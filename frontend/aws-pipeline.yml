@@ -11,7 +11,7 @@ jobs:
   - task: Docker@2
     displayName: 'Build Docker Image'
     inputs:
-      containerRegistry: '37dc5194-dc90-42c0-b602-23a7c30da044'
+      containerRegistry: 'docker-spn'
       repository: '$(imageName)'
       command: 'build'
       Dockerfile: '**/Dockerfile'
@@ -21,10 +21,10 @@ jobs:
     displayName: 'List Docker Images'
   - task: ECRPushImage@1
     inputs:
-      awsCredentials: 'f846a778-d129-487b-95a8-8e0fa07b86c5'
+      awsCredentials: 'aws-spn'
       regionName: 'ap-south-1'
       imageSource: 'imagename'
-      sourceImageName: '$(imageName):dev'
+      sourceImageName: '$(imageName):dev'  # Adjust this line
       repositoryName: '$(repoName)'
       pushTag: 'dev'
       forceDockerNamingConventions: true
