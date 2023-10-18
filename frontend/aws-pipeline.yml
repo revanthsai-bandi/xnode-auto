@@ -25,6 +25,7 @@ jobs:
       regionName: 'ap-south-1'
       imageSource: 'imagename'
       sourceImageName: '$(imageName):$(Build.BuildId)'
+      sourceImageTag: 
       repositoryName: '$(repoName)'
       pushTag: 'dev'
       forceDockerNamingConventions: true
