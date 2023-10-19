@@ -6,8 +6,12 @@ jobs:
   pool:
     vmImage: ubuntu-latest
   steps:
-  - checkout: self
-    fetchDepth: 1
+  - script: |
+      aws ecr get-login-password --region $(AWS_REGION) | docker login --username AWS --password-stdin $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_REGION).amazonaws.com
+    displayName: 'Login to AWS'
+    env:
+      AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
+      AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
   - task: Docker@2
     displayName: 'Build Docker Image'
     inputs:
@@ -16,9 +20,6 @@ jobs:
       command: 'build'
       Dockerfile: '**/Dockerfile'
       tags: 'dev'
-  - script: |
-      docker images  # List Docker images to verify that the image was built successfully
-    displayName: 'List Docker Images'
   - task: ECRPushImage@1
     inputs:
       awsCredentials: 'aws-spn'
