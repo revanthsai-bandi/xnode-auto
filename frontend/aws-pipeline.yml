@@ -6,9 +6,11 @@ jobs:
   pool:
     vmImage: ubuntu-latest
   steps:
+
   - task: Docker@2
     displayName: 'Build Docker Image'
     inputs:
+      containerRegistry: 'dkr-spn'
       repository: '$(imageName)'
       command: 'build'
       Dockerfile: '**/Dockerfile'
@@ -17,9 +19,9 @@ jobs:
     inputs:
       awsCredentials: 'aws-spn'
       regionName: 'ap-south-1'
-      imageSource: 'imagename'
-      sourceImageName: '333100585521.dkr.ecr.ap-south-1.amazonaws.com/test'
+      imageSource: 'imageid'
+      sourceImageId: '$(imageName):$(tag)'
       repositoryName: '$(repoName)'
-      pushTag: 'dev'
+      pushTag: '$(tag)'
 
 
