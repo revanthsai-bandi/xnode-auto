@@ -16,13 +16,6 @@ jobs:
       command: 'build'
       Dockerfile: '**/Dockerfile'
       tags: 'dev'
-      arguments: |
-        # Additional Docker build arguments if needed
-        # For example, you can pass build-time variables here
-          imageName: '$(imageName):$(Build.BuildId)'
-          includeLatestTag: false  # Disable adding ":latest" tag
-    env:
-      DOCKER_BUILDKIT: 1  # Enable BuildKit, which may provide improved build performance
   - script: |
       docker images  # List Docker images to verify that the image was built successfully
     displayName: 'List Docker Images'
@@ -30,9 +23,9 @@ jobs:
     inputs:
       awsCredentials: 'aws-spn'
       regionName: 'ap-south-1'
-      imageSource: 'imageconfig'
-      sourceImageName: '$(imageName):$(Build.BuildId)'
-      sourceImageTag: 'dev'  # Specify the tag here
+      imageSource: 'imageid'
+      sourceImageId: '$(imageName):$(tag)'
       repositoryName: '$(repoName)'
-      pushTag: 'dev'
-      forceDockerNamingConventions: true
+      pushTag: '$(tag)'
+
+
