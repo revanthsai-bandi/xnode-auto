@@ -20,8 +20,8 @@ jobs:
       awsCredentials: 'aws-spn'
       regionName: 'ap-south-1'
       imageSource: 'imageid'
-      sourceImageId: '$(imageName):$(tag)'
+      sourceImageId: '$(imageName):$tag'
       repositoryName: '$(repoName)'
-      pushTag: '$(tag)'
+      pushTag: 
 
 
