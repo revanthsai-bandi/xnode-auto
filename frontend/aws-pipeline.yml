@@ -2,7 +2,7 @@ jobs:
 - job: Job_1
   displayName: Agent job 1
   pool:
-    vmImage: ubuntu-latest
+    vmImage: windows-latest
   steps:
   - task: AWSPowerShellModuleScript@1
     inputs:
