@@ -2,7 +2,7 @@ jobs:
 - job: Job_1
   displayName: Agent job 1
   pool:
-    vmImage: windows-latest
+    vmImage: ubuntu-latest
   steps:
   - task: PowerShell@2
     inputs:
