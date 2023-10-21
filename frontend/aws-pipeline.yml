@@ -17,8 +17,7 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        docker build -t test .
-        docker tag test:latest 333100585521.dkr.ecr.ap-south-1.amazonaws.com/test:latest
+        docker build -t 333100585521.dkr.ecr.ap-south-1.amazonaws.com/test:latest .
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
