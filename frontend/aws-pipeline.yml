@@ -9,7 +9,7 @@ jobs:
       awsCredentials: 'aws-spn'
       regionName: 'ap-south-1'
       scriptType: 'inline'
-      inlineScript: 'aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 333100585521.dkr.ecr.ap-south-1.amazonaws.com'
+      inlineScript: 'aws ecr get-login-password --region ap-south-1 --profile default | docker login --username AWS --password-stdin 333100585521.dkr.ecr.ap-south-1.amazonaws.com'
   # - task: Docker@2
   #   displayName: 'Build Docker Image'
   #   inputs:
