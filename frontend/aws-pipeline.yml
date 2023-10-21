@@ -12,19 +12,6 @@ jobs:
       command: 'build'
       Dockerfile: '**/Dockerfile'
       tags: 'dev'
-      
-  # Add a script task to tag and push the Docker image
-  - script: |
-      # Set the tag variable with the desired value
-      tag="latest"
-      
-      # Tag the Docker image
-      docker tag $(imageName):$tag 333100585521.dkr.ecr.ap-south-1.amazonaws.com/$(repoName):$tag
-      
-      # Authenticate and push the Docker image to ECR
-      docker push 333100585521.dkr.ecr.ap-south-1.amazonaws.com/$(repoName):$tag
-    displayName: 'Tag and Push Docker Image'
-
   - task: ECRPushImage@1
     inputs:
       awsCredentials: 'aws-spn'
