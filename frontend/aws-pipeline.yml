@@ -16,6 +16,6 @@ jobs:
     inputs:
       awsCredentials: 'aws-spn'
       regionName: 'ap-south-1'
-      imageSource: 'imageid'
-      sourceImageId: '$(repoName):$tag'  # Make sure to use the same tag value here
+      imageSource: 'imagename'
+      sourceImageName: '333100585521.dkr.ecr.ap-south-1.amazonaws.com/test'
       repositoryName: '$(repoName)'
