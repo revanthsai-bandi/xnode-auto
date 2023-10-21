@@ -16,8 +16,8 @@ jobs:
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
-      script: |
-        docker build -t 333100585521.dkr.ecr.ap-south-1.amazonaws.com/test:latest .
+      script: 'docker build -t 333100585521.dkr.ecr.ap-south-1.amazonaws.com/test:latest .'
+      workingDirectory: '$(System.DefaultWorkingDirectory)'
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
