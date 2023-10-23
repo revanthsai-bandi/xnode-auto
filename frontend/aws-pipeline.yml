@@ -3,6 +3,11 @@ jobs:
   displayName: Agent job 1
   pool:
     vmImage: ubuntu-latest
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: 'docker build -t 333100585521.dkr.ecr.ap-south-1.amazonaws.com/test:latest .'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/frontend'
   steps:
   - task: PowerShell@2
     inputs:
@@ -11,12 +16,10 @@ jobs:
         aws configure set aws_access_key_id AKIAU3DSXSIYTQKEMCYC 
         aws configure set aws_secret_access_key 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
         aws configure set aws_default_region ap-south-1
-        $password=aws ecr get-login-password --region ap-south-1 --profile default
-        docker login --username AWS --password $password 333100585521.dkr.ecr.ap-south-1.amazonaws.com
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
-      script: 'docker build -t 333100585521.dkr.ecr.ap-south-1.amazonaws.com/test:latest .'
+      script: 'docker build -t Billpay .'
       workingDirectory: '$(System.DefaultWorkingDirectory)/frontend'
   # - task: PowerShell@2
   #   inputs:
