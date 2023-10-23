@@ -31,8 +31,8 @@ stages:
         workingDirectory: '$(System.DefaultWorkingDirectory)/frontend'
     - task: S3Upload@1
       inputs:
-          awsCredentials: 'aws-spn'
-          regionName: 'ap-south-1'
-          bucketName: 'testing'
-          globExpressions: '**'
-          createBucket: true
+        awsCredentials: 'aws-spn'
+        regionName: 'ap-south-1'
+        bucketName: 'xnode-testing'
+        globExpressions: '**'
+        createBucket: true
