@@ -1,33 +1,34 @@
-jobs:
-- job: Job_1
-  displayName: Agent job 1
-  pool:
-    vmImage: ubuntu-latest
-- task: PowerShell@2
-  inputs:
-    targetType: 'inline'
-    script: 'docker build -t 333100585521.dkr.ecr.ap-south-1.amazonaws.com/test:latest .'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/frontend'
-  steps:
-  - task: PowerShell@2
-    inputs:
-      targetType: 'inline'
-      script: |
-        aws configure set aws_access_key_id AKIAU3DSXSIYTQKEMCYC 
-        aws configure set aws_secret_access_key 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
-        aws configure set aws_default_region ap-south-1
-  - task: PowerShell@2
-    inputs:
-      targetType: 'inline'
-      script: 'docker build -t Billpay .'
-      workingDirectory: '$(System.DefaultWorkingDirectory)/frontend'
-  # - task: PowerShell@2
-  #   inputs:
-  #     targetType: 'inline'
-  #     script: 'docker push 333100585521.dkr.ecr.ap-south-1.amazonaws.com/test:latest'
-  - task: S3Upload@1
-    inputs:
-      awsCredentials: 'aws-spn'
-      regionName: 'ap-south-1'
-      bucketName: 'test'
-      globExpressions: '**'
+trigger:  
+  branches:    
+    include:      
+      - dev
+resources:
+- repo: self
+
+variables:
+  tag: '$(Build.BuildId)'
+
+stages:
+- stage: Build
+  displayName: Build image
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: Docker@2
+      displayName: Build an image
+      inputs:
+        containerRegistry: 'docker-spn'
+        repository: '$(imageName)'
+        command: 'build'
+        Dockerfile: '**/Dockerfile'
+        tags: '$(tag)'
+    - task: S3Upload@1
+      inputs:
+          awsCredentials: 'aws-spn'
+          regionName: 'ap-south-1'
+          bucketName: 'testing'
+          globExpressions: '**'
+          createBucket: true
