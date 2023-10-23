@@ -45,4 +45,11 @@ stages:
         sourceFolder: '$(Build.ArtifactStagingDirectory)'
         globExpressions: '**'
         createBucket: true
-
+    - task: BeanstalkDeployApplication@1
+      inputs:
+        awsCredentials: 'aws-spn'
+        regionName: 'ap-south-1'
+        applicationName: 'xnode-testing'
+        environmentName: 'xnode-dev'
+        applicationType: 's3'
+        deploymentBundleBucket: 'chudham'
