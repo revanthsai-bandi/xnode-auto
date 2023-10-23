@@ -27,7 +27,7 @@ stages:
     - task: PowerShell@2
       inputs:
         targetType: 'inline'
-        script: 'docker build -t Billpay .'
+        script: 'docker build -t billpay .'
         workingDirectory: '$(System.DefaultWorkingDirectory)/frontend'
     - task: S3Upload@1
       inputs:
