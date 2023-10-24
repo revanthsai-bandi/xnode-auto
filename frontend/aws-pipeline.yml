@@ -40,16 +40,10 @@ stages:
     - task: S3Upload@1
       inputs:
         awsCredentials: 'aws-spn'
-        regionName: 'ap-south-1'
-        bucketName: 'chudham'
+        regionName: 'us-east-1'
+        bucketName: 'testing'
         sourceFolder: '$(Build.ArtifactStagingDirectory)'
         globExpressions: '**'
         createBucket: true
-    - task: BeanstalkDeployApplication@1
-      inputs:
-        awsCredentials: 'aws-spn'
-        regionName: 'ap-south-1'
-        applicationName: 'xnode-testing'
-        environmentName: 'xnode-dev'
-        applicationType: 'aspnetCoreLinux'
+
 
