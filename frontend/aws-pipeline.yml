@@ -41,7 +41,7 @@ stages:
       inputs:
         awsCredentials: 'aws-spn'
         regionName: 'ap-south-1'
-        bucketName: 'testingx'
+        bucketName: 'autotestingx'
         sourceFolder: '$(Build.ArtifactStagingDirectory)'
         globExpressions: '**'
         createBucket: true
