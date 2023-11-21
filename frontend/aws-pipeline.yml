@@ -24,16 +24,11 @@ stages:
           aws configure set aws_access_key_id AKIAU3DSXSIYTQKEMCYC 
           aws configure set aws_secret_access_key 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
           aws configure set aws_default_region ap-south-1
-    # - task: PowerShell@2
-    #   inputs:
-    #     targetType: 'inline'
-    #     script: 'docker build -t billpay .'
-    #     workingDirectory: '$(System.DefaultWorkingDirectory)/frontend'
-    - task: CopyFiles@2
+    - task: PowerShell@2
       inputs:
-        SourceFolder: '''$(System.DefaultWorkingDirectory)/frontend'''
-        Contents: '**'
-        TargetFolder: '''$(Build.ArtifactStagingDirectory)'''
+        targetType: 'inline'
+        script: 'docker build -t billpay .'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/frontend'
     - task: ArchiveFiles@2
       inputs:
         rootFolderOrFile: '$(System.DefaultWorkingDirectory)/frontend'
@@ -50,4 +45,5 @@ stages:
         sourceFolder: '$(Build.ArtifactStagingDirectory)'
         globExpressions: '**'
         createBucket: true
+
 
