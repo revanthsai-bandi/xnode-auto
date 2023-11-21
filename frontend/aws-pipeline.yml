@@ -16,13 +16,13 @@ jobs:
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
-      script: 'docker build -t 333100585521.dkr.ecr.ap-south-1.amazonaws.com/xnode-auto:test .'
+      script: 'docker build -t 333100585521.dkr.ecr.us-east-1.amazonaws.com/xnode-auto:latest .'
       workingDirectory: '$(System.DefaultWorkingDirectory)/frontend'
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
-      script: 'docker push 333100585521.dkr.ecr.ap-south-1.amazonaws.com/xnode-auto:test'
+      script: 'docker push 333100585521.dkr.ecr.us-east-1.amazonaws.com/xnode-auto:latest'
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
-      script: 'docker push 333100585521.dkr.ecr.ap-south-1.amazonaws.com/xnode-auto:test'
+      script: 'docker push 333100585521.dkr.ecr.us-east-1.amazonaws.com/xnode-auto:latest'
