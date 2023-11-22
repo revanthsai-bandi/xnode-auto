@@ -1,7 +1,7 @@
 trigger:
   branches:
     include:
-    - aws
+    - dev
 stages:
 - stage: build
   displayName: "Build"
