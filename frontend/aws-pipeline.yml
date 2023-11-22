@@ -1,51 +1,52 @@
+# Node.js
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 trigger:
-  branches:
-    include:
-    - dev
+  - aws
+ 
 stages:
-- stage: build
-  displayName: "Build"
-  jobs:
-  - job: build_test
+  - stage: build
     displayName: "Build"
-    pool:
-      vmImage: "ubuntu-latest"
-    steps:
-    - task: CmdLine@2
-      displayName: "Install Node Packages"
-      inputs:
-        script: 'npm install'
-        workingDirectory: '$(System.DefaultWorkingDirectory)'
-    - task: ArchiveFiles@2
-      inputs:
-        rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
-        includeRootFolder: false
-        archiveType: 'zip'
-        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-        replaceExistingArchive: true
-    - task: S3Upload@1
-      inputs:
-        awsCredentials: 'aws-spn'
-        regionName: 'ap-south-1'
-        bucketName: 'elasticbeanstalk-ap-south-1-333100585521'
-        sourceFolder: '$(Build.ArtifactStagingDirectory)'
-        globExpressions: '*.zip'
-  - job: deploy_to_beanstalk
-    displayName: "Deploy to AWS Elastic Beanstalk"
-    dependsOn:
-    - build_test
-    pool:
-      vmImage: "ubuntu-latest"
-    steps:
-    - task: BeanstalkDeployApplication@1
-      inputs:
-        awsCredentials: 'aws-spn'
-        regionName: 'ap-south-1'
-        applicationName: 'dev-app'
-        environmentName: 'dev-env'
-        applicationType: 's3'
-        deploymentBundleBucket: 'elasticbeanstalk-ap-south-1-333100585521'
-        deploymentBundleKey: '$(Build.BuildId).zip'
-        versionLabel: '$(Build.BuildId)'
-        description: 'AZ-DevOps-AWS'
+    jobs:
+      - job: build_test
+        displayName: "Build"
+        pool:
+          vmImage: "ubuntu-latest"
+        steps:
+          - script: 'npm install'
+            displayName: "Install Node Packages"
+            workingDirectory: '$(System.DefaultWorkingDirectory)'
 
+          - task: ArchiveFiles@2
+            inputs:
+              rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+              includeRootFolder: false
+              archiveType: 'zip'
+              archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+              replaceExistingArchive: true
+          - task: S3Upload@1
+            inputs:
+              awsCredentials: 'aws-spn'
+              regionName: 'ap-south-1'
+              bucketName: 'elasticbeanstalk-ap-south-1-333100585521'
+              sourceFolder: '$(Build.ArtifactStagingDirectory)'
+              globExpressions: '*.zip'
+            
+      - job: deploy_to_beanstalk
+        displayName: "Deploy to AWS Elastic Beanstalk"
+        dependsOn: build_test
+        pool:
+          vmImage: "ubuntu-latest"
+        steps:
+          - task: BeanstalkDeployApplication@1
+            inputs:
+              awsCredentials: 'aws-spn'
+              regionName: 'ap-south-1'
+              applicationName: 'dev-app'
+              environmentName: 'dev-env'
+              applicationType: 's3'
+              deploymentBundleBucket: 'elasticbeanstalk-ap-south-1-333100585521'
+              deploymentBundleKey: '$(Build.BuildId).zip'
+              versionLabel: '$(Build.BuildId)'
+              description: 'AZ-DevOps-AWS'
