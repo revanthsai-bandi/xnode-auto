@@ -14,7 +14,7 @@ stages:
         pool:
           vmImage: "ubuntu-latest"
         steps:
-          - script: 'npm install'
+          - script: 'npm i --legacy-peer-deps'
             displayName: "Install Node Packages"
             workingDirectory: '$(System.DefaultWorkingDirectory)/frontend'
 
