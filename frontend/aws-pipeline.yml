@@ -42,7 +42,6 @@ stages:
               sourceFolder: '$(Build.ArtifactStagingDirectory)/frontend/dist'
               globExpressions: '*.zip'
               targetFolder: 'autotestingx/'
-              createBucket: true
             
       - job: deploy_to_beanstalk
         displayName: "Deploy to AWS Elastic Beanstalk"
