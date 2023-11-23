@@ -39,7 +39,7 @@ stages:
               awsCredentials: 'aws-spn'
               regionName: 'ap-south-1'
               bucketName: 'autotestingx'
-              sourceFolder: '$(Build.ArtifactStagingDirectory)/frontend/dist'
+              sourceFolder: '$(Build.ArtifactStagingDirectory)'
               globExpressions: '*.zip'
             
       - job: deploy_to_beanstalk
