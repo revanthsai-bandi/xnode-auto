@@ -17,6 +17,9 @@ stages:
           - script: 'npm i --legacy-peer-deps'
             displayName: "Install Node Packages"
             workingDirectory: '$(System.DefaultWorkingDirectory)/frontend'
+          - script: 'npm run build'
+            displayName: "Build Node Packages"
+            workingDirectory: '$(System.DefaultWorkingDirectory)/frontend'
             
           
           - task: ArchiveFiles@2
