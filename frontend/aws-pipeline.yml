@@ -34,28 +34,30 @@ stages:
       #         archiveType: 'zip'
       #         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
       #         replaceExistingArchive: true
-      #     - task: S3Upload@1
-      #       inputs:
-      #         awsCredentials: 'aws-spn'
-      #         regionName: 'ap-south-1'
-      #         bucketName: 'elasticbeanstalk-ap-south-1-333100585521'
-      #         sourceFolder: '$(Build.ArtifactStagingDirectory)'
-      #         globExpressions: '*.zip'
+          - task: S3Upload@1
+            inputs:
+              awsCredentials: 'aws-spn'
+              regionName: 'ap-south-1'
+              bucketName: 'autotestingx'
+              sourceFolder: '$(Build.SourcesDirectory)/frontend/dist'
+              globExpressions: '*.zip'
+              targetFolder: 'autotestingx/'
+              createBucket: true
             
-      # - job: deploy_to_beanstalk
-      #   displayName: "Deploy to AWS Elastic Beanstalk"
-      #   dependsOn: build_test
-      #   pool:
-      #     vmImage: "ubuntu-latest"
-      #   steps:
-      #     - task: BeanstalkDeployApplication@1
-      #       inputs:
-      #         awsCredentials: 'aws-spn'
-      #         regionName: 'ap-south-1'
-      #         applicationName: 'dev-app'
-      #         environmentName: 'dev-env'
-      #         applicationType: 's3'
-      #         deploymentBundleBucket: 'elasticbeanstalk-ap-south-1-333100585521'
-      #         deploymentBundleKey: '$(Build.BuildId).zip'
-      #         versionLabel: '$(Build.BuildId)'
-      #         description: 'AZ-DevOps-AWS'
+      - job: deploy_to_beanstalk
+        displayName: "Deploy to AWS Elastic Beanstalk"
+        dependsOn: build_test
+        pool:
+          vmImage: "ubuntu-latest"
+        steps:
+          - task: BeanstalkDeployApplication@1
+            inputs:
+              awsCredentials: 'aws-spn'
+              regionName: 'ap-south-1'
+              applicationName: 'dev-app'
+              environmentName: 'dev-env'
+              applicationType: 's3'
+              deploymentBundleBucket: 'elasticbeanstalk-ap-south-1-333100585521'
+              deploymentBundleKey: '$(Build.BuildId).zip'
+              versionLabel: '$(Build.BuildId)'
+              description: 'AZ-DevOps-AWS'
