@@ -21,7 +21,7 @@ stages:
           
           - task: ArchiveFiles@2
             inputs:
-              rootFolderOrFile: '$(System.DefaultWorkingDirectory)/frontend'
+              rootFolderOrFile: '$(System.DefaultWorkingDirectory)/frontend/dist'
               includeRootFolder: false
               archiveType: 'zip'
               archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
@@ -31,7 +31,7 @@ stages:
               awsCredentials: 'AWS-spn'
               regionName: 'ap-south-1'
               bucketName: 'elasticbeanstalk-ap-south-1-333100585521'
-              sourceFolder: '$(Build.ArtifactStagingDirectory)'
+              sourceFolder: '$(Build.ArtifactStagingDirectory)/frontend/dist'
               globExpressions: '*.zip'
               
  
