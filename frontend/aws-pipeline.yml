@@ -27,20 +27,20 @@ stages:
           #     ArtifactName: 'drop'
           #     publishLocation: 'Container'
 
-          - task: ArchiveFiles@2
-            inputs:
-              rootFolderOrFile: '$(System.DefaultWorkingDirectory)/frontend/dist'
-              includeRootFolder: false
-              archiveType: 'zip'
-              archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-              replaceExistingArchive: true
+          # - task: ArchiveFiles@2
+          #   inputs:
+          #     rootFolderOrFile: '$(System.DefaultWorkingDirectory)/frontend/dist'
+          #     includeRootFolder: false
+          #     archiveType: 'zip'
+          #     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+          #     replaceExistingArchive: true
           - task: S3Upload@1
             inputs:
               awsCredentials: 'aws-spn'
               regionName: 'ap-south-1'
               bucketName: 'autotestingx'
-              sourceFolder: '$(Build.ArtifactStagingDirectory)'
-              globExpressions: '*.zip'
+              sourceFolder: '$(System.DefaultWorkingDirectory)/frontend/dist'
+              globExpressions: '**/*'
             
       - job: deploy_to_beanstalk
         displayName: "Deploy to AWS Elastic Beanstalk"
@@ -56,6 +56,6 @@ stages:
               environmentName: 'dev-env'
               applicationType: 's3'
               deploymentBundleBucket: 'autotestingx'
-              deploymentBundleKey: '$(Build.BuildId).zip'
-              versionLabel: '$(Build.BuildId)'
+              deploymentBundleKey: 'frontend/dist'
+              versionLabel: '$(Build.SourceBranchName)-$(Build.BuildId)'
               description: 'AZ-DevOps-AWS'
