@@ -57,7 +57,7 @@ stages:
               applicationName: 'dev-app'
               environmentName: 'dev-env'
               applicationType: 's3'
-              deploymentBundleBucket: 'elasticbeanstalk-ap-south-1-333100585521'
+              deploymentBundleBucket: 'autotestingx'
               deploymentBundleKey: '$(Build.BuildId).zip'
               versionLabel: '$(Build.BuildId)'
               description: 'AZ-DevOps-AWS'
