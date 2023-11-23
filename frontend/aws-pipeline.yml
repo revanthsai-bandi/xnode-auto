@@ -39,7 +39,7 @@ stages:
               awsCredentials: 'aws-spn'
               regionName: 'ap-south-1'
               bucketName: 'elasticbeanstalk-ap-south-1-333100585521'
-              sourceFolder: '$(System.DefaultWorkingDirectory)/frontend/dist'
+              sourceFolder: '$(System.SourcesDirectory)/frontend/dist'
               globExpressions: '**/*'
             
       - job: deploy_to_beanstalk
