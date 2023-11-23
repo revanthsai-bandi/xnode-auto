@@ -20,7 +20,7 @@ stages:
 
           - script: 'npm run build'
             displayName: "Build Node Packages"
-          #   workingDirectory: '$(System.DefaultWorkingDirectory)/frontend'     
+            workingDirectory: '$(System.DefaultWorkingDirectory)/frontend'     
           # - task: PublishBuildArtifacts@1
           #   inputs:
           #     PathtoPublish: '$(Build.SourcesDirectory)/frontend/dist'
