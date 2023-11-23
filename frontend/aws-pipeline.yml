@@ -18,35 +18,44 @@ stages:
             displayName: "Install Node Packages"
             workingDirectory: '$(System.DefaultWorkingDirectory)/frontend'
 
-          - task: ArchiveFiles@2
+          - script: 'npm run build'
+            displayName: "Build Node Packages"
+            workingDirectory: '$(System.DefaultWorkingDirectory)/frontend'     
+          - task: PublishBuildArtifacts@1
             inputs:
-              rootFolderOrFile: '$(System.DefaultWorkingDirectory)/frontend'
-              includeRootFolder: false
-              archiveType: 'zip'
-              archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-              replaceExistingArchive: true
-          - task: S3Upload@1
-            inputs:
-              awsCredentials: 'aws-spn'
-              regionName: 'ap-south-1'
-              bucketName: 'elasticbeanstalk-ap-south-1-333100585521'
-              sourceFolder: '$(Build.ArtifactStagingDirectory)'
-              globExpressions: '*.zip'
+              PathtoPublish: '$(Build.ArtifactStagingDirectory)/dist'
+              ArtifactName: 'drop'
+              publishLocation: 'Container'
+
+      #     - task: ArchiveFiles@2
+      #       inputs:
+      #         rootFolderOrFile: '$(System.DefaultWorkingDirectory)/frontend'
+      #         includeRootFolder: false
+      #         archiveType: 'zip'
+      #         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+      #         replaceExistingArchive: true
+      #     - task: S3Upload@1
+      #       inputs:
+      #         awsCredentials: 'aws-spn'
+      #         regionName: 'ap-south-1'
+      #         bucketName: 'elasticbeanstalk-ap-south-1-333100585521'
+      #         sourceFolder: '$(Build.ArtifactStagingDirectory)'
+      #         globExpressions: '*.zip'
             
-      - job: deploy_to_beanstalk
-        displayName: "Deploy to AWS Elastic Beanstalk"
-        dependsOn: build_test
-        pool:
-          vmImage: "ubuntu-latest"
-        steps:
-          - task: BeanstalkDeployApplication@1
-            inputs:
-              awsCredentials: 'aws-spn'
-              regionName: 'ap-south-1'
-              applicationName: 'dev-app'
-              environmentName: 'dev-env'
-              applicationType: 's3'
-              deploymentBundleBucket: 'elasticbeanstalk-ap-south-1-333100585521'
-              deploymentBundleKey: '$(Build.BuildId).zip'
-              versionLabel: '$(Build.BuildId)'
-              description: 'AZ-DevOps-AWS'
+      # - job: deploy_to_beanstalk
+      #   displayName: "Deploy to AWS Elastic Beanstalk"
+      #   dependsOn: build_test
+      #   pool:
+      #     vmImage: "ubuntu-latest"
+      #   steps:
+      #     - task: BeanstalkDeployApplication@1
+      #       inputs:
+      #         awsCredentials: 'aws-spn'
+      #         regionName: 'ap-south-1'
+      #         applicationName: 'dev-app'
+      #         environmentName: 'dev-env'
+      #         applicationType: 's3'
+      #         deploymentBundleBucket: 'elasticbeanstalk-ap-south-1-333100585521'
+      #         deploymentBundleKey: '$(Build.BuildId).zip'
+      #         versionLabel: '$(Build.BuildId)'
+      #         description: 'AZ-DevOps-AWS'
