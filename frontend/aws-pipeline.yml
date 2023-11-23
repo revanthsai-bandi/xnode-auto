@@ -17,31 +17,24 @@ stages:
           - script: 'npm i --legacy-peer-deps'
             displayName: "Install Node Packages"
             workingDirectory: '$(System.DefaultWorkingDirectory)/frontend'
-
-          - script: 'npm run build'
-            displayName: "Build Node Packages"
-            workingDirectory: '$(System.DefaultWorkingDirectory)/frontend'     
-          # - task: PublishBuildArtifacts@1
-          #   inputs:
-          #     PathtoPublish: '$(Build.SourcesDirectory)/frontend/dist'
-          #     ArtifactName: 'drop'
-          #     publishLocation: 'Container'
-
-          # - task: ArchiveFiles@2
-          #   inputs:
-          #     rootFolderOrFile: '$(System.DefaultWorkingDirectory)/frontend/dist'
-          #     includeRootFolder: false
-          #     archiveType: 'zip'
-          #     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-          #     replaceExistingArchive: true
+            
+          
+          - task: ArchiveFiles@2
+            inputs:
+              rootFolderOrFile: '$(System.DefaultWorkingDirectory)/frontend'
+              includeRootFolder: false
+              archiveType: 'zip'
+              archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+              replaceExistingArchive: true
           - task: S3Upload@1
             inputs:
-              awsCredentials: 'aws-spn'
+              awsCredentials: 'AWS-spn'
               regionName: 'ap-south-1'
               bucketName: 'elasticbeanstalk-ap-south-1-333100585521'
-              sourceFolder: '$(System.DefaultWorkingDirectory)/frontend/dist'
-              globExpressions: '**/*'
+              sourceFolder: '$(Build.ArtifactStagingDirectory)'
+              globExpressions: '*.zip'
               
+ 
       - job: deploy_to_beanstalk
         displayName: "Deploy to AWS Elastic Beanstalk"
         dependsOn: build_test
@@ -56,6 +49,6 @@ stages:
               environmentName: 'dev-env'
               applicationType: 's3'
               deploymentBundleBucket: 'elasticbeanstalk-ap-south-1-333100585521'
-              deploymentBundleKey: 'frontend/dist'
-              versionLabel: '$(Build.SourceBranchName)-$(Build.BuildId)'
+              deploymentBundleKey: '$(Build.BuildId).zip'
+              versionLabel: '$(Build.BuildId)'
               description: 'AZ-DevOps-AWS'
