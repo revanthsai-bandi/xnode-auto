@@ -23,7 +23,7 @@ stages:
             workingDirectory: '$(System.DefaultWorkingDirectory)/frontend'     
           - task: PublishBuildArtifacts@1
             inputs:
-              PathtoPublish: '$(Build.ArtifactStagingDirectory)/dist'
+              PathtoPublish: '$(Build.ArtifactStagingDirectory)/frontend/dist'
               ArtifactName: 'drop'
               publishLocation: 'Container'
 
