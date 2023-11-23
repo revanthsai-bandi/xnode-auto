@@ -31,7 +31,7 @@ stages:
               awsCredentials: 'AWS-spn'
               regionName: 'ap-south-1'
               bucketName: 'elasticbeanstalk-ap-south-1-333100585521'
-              sourceFolder: '$(Build.ArtifactStagingDirectory)/frontend/dist'
+              sourceFolder: '$(Build.ArtifactStagingDirectory)'
               globExpressions: '*.zip'
               
  
