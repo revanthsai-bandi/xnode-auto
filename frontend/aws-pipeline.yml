@@ -38,7 +38,7 @@ stages:
             inputs:
               awsCredentials: 'aws-spn'
               regionName: 'ap-south-1'
-              bucketName: 'autotestingx'
+              bucketName: 'elasticbeanstalk-ap-south-1-333100585521'
               sourceFolder: '$(System.DefaultWorkingDirectory)/frontend/dist'
               globExpressions: '**/*'
             
@@ -55,7 +55,7 @@ stages:
               applicationName: 'dev-app'
               environmentName: 'dev-env'
               applicationType: 's3'
-              deploymentBundleBucket: 'autotestingx'
+              deploymentBundleBucket: 'elasticbeanstalk-ap-south-1-333100585521'
               deploymentBundleKey: 'frontend/dist'
               versionLabel: '$(Build.SourceBranchName)-$(Build.BuildId)'
               description: 'AZ-DevOps-AWS'
