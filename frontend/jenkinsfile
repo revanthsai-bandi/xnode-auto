@@ -1,0 +1,46 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_REGION = 'ap-south-1'
+        S3_BUCKET = 'testing-autox'
+        EB_APPLICATION_NAME = 'dev-app'
+        EB_ENVIRONMENT_NAME = 'dev-env'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/Sairam-Smart/xnode-auto.git'
+            }
+        }
+
+        stage('Build and Package') {
+            steps {
+                script {
+                    // Add build steps if needed
+
+                    // Archive artifacts
+                    archiveArtifacts artifacts: '**/app.zip', fingerprint: true
+                }
+            }
+        }
+
+        stage('Deploy to Elastic Beanstalk') {
+            steps {
+                script {
+                    def versionLabel = env.BUILD_NUMBER
+
+                    // Upload artifact to S3
+                    sh "aws s3 cp ${env.WORKSPACE}/app.zip s3://${env.S3_BUCKET}/app-${versionLabel}.zip"
+
+                    // Create Elastic Beanstalk application version
+                    sh "aws elasticbeanstalk create-application-version --application-name ${env.EB_APPLICATION_NAME} --version-label ${versionLabel} --source-bundle S3Bucket=${env.S3_BUCKET},S3Key=app-${versionLabel}.zip"
+
+                    // Deploy to Elastic Beanstalk environment
+                    sh "aws elasticbeanstalk update-environment --application-name ${env.EB_APPLICATION_NAME} --environment-name ${env.EB_ENVIRONMENT_NAME} --version-label ${versionLabel}"
+                }
+            }
+        }
+    }
+}
