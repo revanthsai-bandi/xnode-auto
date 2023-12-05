@@ -14,7 +14,6 @@ pipeline {
                 git 'https://github.com/Sairam-Smart/xnode-auto.git'
             }
         }
-
         stage('Build and Package') {
             steps {
                 script {
