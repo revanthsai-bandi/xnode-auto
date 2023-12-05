@@ -6,7 +6,7 @@ pipeline {
         S3_BUCKET = 'testing-autox'
         EB_APPLICATION_NAME = 'dev-app'
         EB_ENVIRONMENT_NAME = 'dev-env'
-    }
+    } 
  
     stages {
         stage('Checkout') {
