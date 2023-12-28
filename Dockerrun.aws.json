@@ -1,12 +1,13 @@
 {
-  "AWSEBDockerrunVersion": "1",
   "Image": {
-    "Name": "333100585521.dkr.ecr.ap-south-1.amazonaws.com/test:latest",
+    "Name": "yeasy/simple-web",
     "Update": "true"
   },
   "Ports": [
     {
-      "ContainerPort": "8080"
+      "ContainerPort": 8080,
+      "HostPort": 8000
     }
   ]
 }
+          
