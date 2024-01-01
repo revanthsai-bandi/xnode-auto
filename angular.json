@@ -157,22 +157,22 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "angular-template:build:production"
+              "buildTarget": "angular-template:build:production"
             },
             "dev": {
-              "browserTarget": "angular-template:build:dev"
+              "buildTarget": "angular-template:build:dev"
             },
             "qa": {
-              "browserTarget": "angular-template:build:qa"
+              "buildTarget": "angular-template:build:qa"
             },
             "demo": {
-              "browserTarget": "angular-template:build:demo"
+              "buildTarget": "angular-template:build:demo"
             },
             "beta": {
-              "browserTarget": "angular-template:build:beta"
+              "buildTarget": "angular-template:build:beta"
             },
             "development": {
-              "browserTarget": "angular-template:build:development"
+              "buildTarget": "angular-template:build:development"
             },
             "beta": {
               "browserTarget": "angular-template:build:beta"
@@ -183,7 +183,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "angular-template:build"
+            "buildTarget": "angular-template:build"
           }
         },
         "test": {
