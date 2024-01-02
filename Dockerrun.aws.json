@@ -1,12 +1,11 @@
 {
   "Image": {
-    "Name": "yeasy/simple-web",
+    "Name": "revanthaws1/my-public-images:xnode",
     "Update": "true"
   },
   "Ports": [
     {
-      "ContainerPort": 8080,
-      "HostPort": 8000
+      "ContainerPort": 80
     }
   ]
 }
